@@ -1,0 +1,86 @@
+def machine_failure_dashboard():
+    print("=" * 50)
+    print("Machine Failure Prediction Dashboard".center(50))
+    print("=" * 50)
+
+    # Model performance
+    print("\nModel Performance (XGBoost):")
+    print("- Accuracy:  0.980")
+    print("- Precision: 0.672")
+    print("- Recall:    0.705")
+    print("- F1-Score:  0.688")
+    print("- AUC:       0.972")
+
+    print("\nDisplaying Model Performance Chart...")
+    display_chart()
+
+    # Business impact
+    print("\nBusiness Impact:")
+    print("- Prevented Failures: $2,050,000")
+    print("- Maintenance Costs:  $275,000")
+    print("- False Alarm Costs:  $14,000")
+    print("- Missed Failure Costs: $1,000,000")
+    print("- Net Savings:        $761,000")
+    print("- Annual Savings:     $3,805,000")
+    print("- ROI:                7510.0%")
+
+    # Input interface
+    print("\nEnter Machine Parameters:")
+    try:
+        air_temp = float(input("Air temperature (K) (e.g., 298.1): "))
+        process_temp = float(input("Process temperature (K) (e.g., 308.6): "))
+        rpm = float(input("Rotational speed (rpm) (e.g., 1551): "))
+        torque = float(input("Torque (Nm) (e.g., 42.8): "))
+        tool_wear = float(input("Tool wear (min) (e.g., 0): "))
+        type_input = input("Type (L, M, H): ").strip().upper()
+
+        if type_input not in ['L', 'M', 'H']:
+            print("Error: Type must be L, M, or H")
+            return
+
+        # Format input
+        input_data = pd.DataFrame({
+            'Air_temperature_K': [air_temp],
+            'Process_temperature_K': [process_temp],
+            'Rotational_speed_rpm': [rpm],
+            'Torque_Nm': [torque],
+            'Tool_wear_min': [tool_wear],
+            'Type': [type_input]
+        })
+        input_data = pd.get_dummies(input_data, columns=['Type'], prefix='Type')
+        for col in ['Type_L', 'Type_M', 'Type_H']:
+            if col not in input_data.columns:
+                input_data[col] = 0
+        input_data = input_data[X.columns]
+        input_data[numerical_features] = scaler.transform(input_data[numerical_features])
+
+        # Predict
+        prob = model.predict_proba(input_data)[:, 1][0]
+        prediction = "Failure" if prob >= THRESHOLD else "No Failure"
+
+        # Output
+        print("\nPrediction Results:")
+        print(f"- Failure Probability: {prob:.2%}")
+        print(f"- Prediction: {prediction}")
+
+        print("\nTop Features to Monitor:")
+        print("1. Torque (Nm)")
+        print("2. Tool wear (min)")
+        print("3. Rotational speed (rpm)")
+        print("4. Air temperature (K)")
+        print("5. Process temperature (K)")
+
+        print("\nRecommendations:")
+        print("1. Deploy XGBoost model (AUC: 0.972)")
+        print("2. Use threshold: 0.7")
+        print("3. Implement two-tier alert system")
+        print("4. Retrain model quarterly")
+        print("5. Monitor real-time data")
+
+    except ValueError:
+        print("Error: Enter valid numerical values")
+
+    print("\n" + "=" * 50)
+    print("Run again for another prediction.")
+    print("=" * 50)
+machine_failure_dashboard()
