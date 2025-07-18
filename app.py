@@ -1,50 +1,54 @@
-import streamlit as st
+# app.py
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "src")))
+from src.pipeline.prediction_pipeline import CustomData, PredictPipeline
 import pandas as pd
-from src.data_preprocessing import load_and_clean_data
-from src.feature_engineering import apply_feature_engineering
-from src.train_model import train_xgb_model, evaluate_model
-from src.predict import get_prediction
+import streamlit as st
 
-st.title("Machine Failure Prediction Dashboard")
+st.set_page_config(page_title="Machine Failure Prediction", layout="centered")
 
-# Step 1: Data loading
-@st.cache_data
-def load_data():
-    df = load_and_clean_data("data/machine failure.csv")
-    return df
+st.title("⚙️ Machine Failure Prediction Dashboard")
+st.markdown("---")
 
-df = load_data()
-st.subheader("Sample Data")
-st.write(df.head())
+st.subheader("🔧 Enter Input Parameters")
 
-# Step 2: Feature engineering and train model
-X, y, scaler = apply_feature_engineering(df)
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-model = train_xgb_model(X_train, y_train)
-metrics = evaluate_model(model, X_test, y_test)
+# Sidebar numeric inputs for machine parameters
+air_temp = st.number_input("Air temperature [K]", min_value=250.0, max_value=400.0, value=298.0, step=0.1)
+process_temp = st.number_input("Process temperature [K]", min_value=250.0, max_value=500.0, value=308.6, step=0.1)
+rpm = st.number_input("Rotational speed [rpm]", min_value=100.0, max_value=3000.0, value=1551.0, step=1.0)
+torque = st.number_input("Torque [Nm]", min_value=0.0, max_value=100.0, value=42.8, step=0.1)
+tool_wear = st.number_input("Tool wear [min]", min_value=0.0, max_value=250.0, value=0.0, step=1.0)
 
-st.subheader("Model Performance")
-st.write(metrics)
+type_options = ["L", "M", "H"]
+type_input = st.selectbox("Product Type", type_options)
 
-# Step 3: Interactive Prediction
-st.subheader("Try a Prediction")
-air_temp = st.number_input("Air temperature (K)", value=298.1)
-proc_temp = st.number_input("Process temperature (K)", value=308.6)
-rpm = st.number_input("Rotational speed (rpm)", value=1551)
-torque = st.number_input("Torque (Nm)", value=42.8)
-tool_wear = st.number_input("Tool wear (min)", value=0)
-type_input = st.selectbox("Type", options=["L", "M", "H"])
+st.markdown("---")
 
-if st.button("Predict Failure"):
-    params = {
-        "Air_temperature_K": air_temp,
-        "Process_temperature_K": proc_temp,
-        "Rotational_speed_rpm": rpm,
-        "Torque_Nm": torque,
-        "Tool_wear_min": tool_wear,
-        "Type": type_input
-    }
-    prediction, probability = get_prediction(model, scaler, params, X_columns=X.columns)
-    st.write(f"Prediction: **{prediction}**")
-    st.write(f"Failure Probability: **{probability:.2%}**")
+if st.button("🔍 Predict Failure"):
+    try:
+        # Step 1: Capture user input
+        input_data = CustomData(
+            air_temperature_K=air_temp,
+            process_temperature_K=process_temp,
+            rotational_speed_rpm=rpm,
+            torque_Nm=torque,
+            tool_wear_min=tool_wear,
+            M_type=type_input
+        )
+
+        # Step 2: Convert to DataFrame format
+        final_df = input_data.get_data_as_dataframe()
+
+        # Step 3: Run through prediction pipeline
+        predictor = PredictPipeline()
+        prediction, probability = predictor.predict(final_df)
+
+        # Step 4: Display result
+        st.subheader("📈 Prediction Result")
+        result = "⚠️ Machine Failure" if prediction[0] == 1 else "✅ No Failure Detected"
+        st.markdown(f"**Result:** {result}")
+        st.markdown(f"**Failure Probability:** `{probability[0]:.2%}`")
+
+    except Exception as e:
+        st.error(f"❌ Error during prediction: {str(e)}")
