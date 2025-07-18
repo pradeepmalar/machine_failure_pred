@@ -1,0 +1,23 @@
+[ 2025-07-18 20:25:33,644 ] 14 root -INFO- \U0001f680 Starting training pipeline...
+[ 2025-07-18 20:25:33,646 ] 18 root -INFO- Loading data from: data/machine failure.csv
+[ 2025-07-18 20:25:33,646 ] 17 root -INFO- Reading data from data/machine failure.csv
+[ 2025-07-18 20:25:33,675 ] 20 root -INFO- Initial data shape: (10000, 14)
+[ 2025-07-18 20:25:33,677 ] 31 root -INFO- Renamed columns as: {'Air temperature [K]': 'Air_temperature_K', 'Process temperature [K]': 'Process_temperature_K', 'Rotational speed [rpm]': 'Rotational_speed_rpm', 'Torque [Nm]': 'Torque_Nm', 'Tool wear [min]': 'Tool_wear_min'}
+[ 2025-07-18 20:25:33,704 ] 39 root -INFO- No duplicate rows found.
+[ 2025-07-18 20:25:33,708 ] 60 root -INFO- No missing values to handle.
+[ 2025-07-18 20:25:33,708 ] 63 root -INFO- Data cleaning complete. Final shape: (10000, 14)
+[ 2025-07-18 20:25:33,708 ] 22 root -INFO- Applying feature engineering...
+[ 2025-07-18 20:25:33,708 ] 17 root -INFO- Feature engineering started.
+[ 2025-07-18 20:25:33,713 ] 32 root -INFO- Selected features: ['Air_temperature_K', 'Process_temperature_K', 'Rotational_speed_rpm', 'Torque_Nm', 'Tool_wear_min', 'Type']
+[ 2025-07-18 20:25:33,713 ] 33 root -INFO- Target column: 'Machine failure'
+[ 2025-07-18 20:25:33,719 ] 37 root -INFO- One-hot encoded 'Type' column. Result columns: ['Air_temperature_K', 'Process_temperature_K', 'Rotational_speed_rpm', 'Torque_Nm', 'Tool_wear_min', 'Type_H', 'Type_L', 'Type_M']
+[ 2025-07-18 20:25:33,728 ] 56 root -INFO- Standard scaling applied to numerical features.
+[ 2025-07-18 20:25:33,729 ] 58 root -INFO- Feature engineering completed successfully.
+[ 2025-07-18 20:25:33,742 ] 31 root -INFO- Training XGBoost model...
+[ 2025-07-18 20:25:33,742 ] 13 root -INFO- Starting training of XGBoost model.
+[ 2025-07-18 20:25:34,068 ] 16 root -INFO- XGBoost model training complete.
+[ 2025-07-18 20:25:34,068 ] 27 root -INFO- Evaluating model performance on test set.
+[ 2025-07-18 20:25:34,092 ] 38 root -INFO- Evaluation complete. Metrics: {'accuracy': 0.9835, 'precision': 0.868421052631579, 'recall': 0.5409836065573771, 'f1_score': 0.6666666666666666, 'auc': 0.9721167747444601}
+[ 2025-07-18 20:25:34,093 ] 36 root -INFO- \u2705 Training complete. Test accuracy: 0.9835
+[ 2025-07-18 20:25:34,093 ] 39 root -INFO- Saving model and scaler...
+[ 2025-07-18 20:25:34,101 ] 42 root -INFO- \u2705 Artifacts saved successfully.
