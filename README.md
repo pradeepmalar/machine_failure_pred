@@ -1,81 +1,61 @@
-Machine Failure Prediction (End-to-End ML Pipeline)
-Overview
-This project predicts machine failures using operational sensor data and the XGBoost classification algorithm. The pipeline is fully modularized for maintainability, reproducibility, and deployment readiness. Business impact and model interpretability are included.
-
-Project Structure:
-
+Machine Failure Prediction (End-to-End ML Pipeline & Dashboard)
+Predict machine failures using sensor and process data with an XGBoost model. This repository features a modular Python codebase, a Streamlit web dashboard, and a Jupyter notebook for exploratory analysis.
+Project Structure
 machine_failure_pred/
-├── artifacts/            # Saved models, scalers, outputs
-├── data/                 # Raw/source data (not tracked by git)
-├── notebook/
-│   └── machine_failure_analysis.ipynb  # Main E2E notebook
+├── app.py                        # Streamlit web dashboard
 ├── src/
 │   ├── __init__.py
 │   ├── data_preprocessing.py
 │   ├── feature_engineering.py
-│   ├── tra     in_model.py
+│   ├── train_model.py
 │   ├── predict.py
 │   └── dashboard_utils.py
+├── notebook/
+│   └── machine_failure_analysis.ipynb
+├── data/
+│   └── machine failure.csv
+├── artifacts/                    # (optional: for saved models, etc)
 ├── requirements.txt
 ├── README.md
 └── .gitignore
 
+Setup Instructions
+1.	Clone this repository
+git clone https://github.com/pradeepmalar/machine_failure_pred.git
+cd machine_failure_pred
 
+2.	(Optional) Create a virtual environment
+python -m venv venv
+source venv/bin/activate    # On Windows: venv\Scripts\activate
 
-Setup & Installation
+3.	Install dependencies
+pip install -r requirements.txt
 
-1. Clone this repository
-    git clone https://github.com/pradeepmalar/machine_failure_pred.git
-    cd machine_failure_pred
+4.	Ensure data is available
+o	Place machine failure.csv in the data/ directory.
+How to Run the Project
+A. Interactive Notebook Workflow
+Navigate to the notebook/ directory and open the notebook:
+jupyter notebook notebook/machine_failure_analysis.ipynb
 
-2. Set up a virtual environment
-    python -m venv venv
-    source venv/bin/activate       # On Windows: venv\Scripts\activate
+•	Run all cells for end-to-end data cleaning, model training, evaluation, and interactive prediction.
+•	All code uses modularized functions from the src/ folder.
+B. Web Dashboard (Streamlit)
+You can interact with the model and make live predictions in your browser.
+Start the dashboard:
+streamlit run app.py
 
-3. Install dependencies:
-    pip install -r requirements.txt
-
-4. Place data file
-    Make sure your dataset (e.g., machine failure.csv) is in the data/ directory.
-
-
-How to Run: 
-Option 1: Run the End-to-End Notebook
-
-1. Open notebook/machine_failure_analysis.ipynb in Jupyter or VS Code.
-2. Run all cells to:
-    Load and clean data
-    Apply feature engineering
-    Train and evaluate the model
-    Visualize results and business impact
-    Perform interactive predictions
-
-Option 2: Use Individual Python Modules
-    Import and use functions in your own scripts for batch or real-time inference.
-    
-    Example:
-    
-    from src.data_preprocessing import load_and_clean_data
-    from src.feature_engineering import apply_feature_engineering
-    from src.train_model import train_xgb_model, evaluate_model
-    from src.predict import get_prediction
-
-    df = load_and_clean_data("data/machine failure.csv")
-    X, y, scaler = apply_feature_engineering(df)
-    # ...train, split, evaluate as in the notebook
-
-
-Pipeline Components
-1. Data Preprocessing: Cleans input data, renames columns, handles missing values
-2. Feature Engineering: One-hot encoding for Type, standardizes numeric features
-3. Model Training: XGBoost classifier fit on train data
-4. Evaluation: Reports Accuracy, Precision, Recall, F1-score, and AUC
-5. Prediction: Clean, encode, and scale new samples in a single call
-6. Dashboard: Visualization and business impact summary
-
-
-Example Prediction (In Code):
-
+•	Enter sensor data in the sidebar to get instant predictions.
+•	View model performance and business impact directly on the dashboard.
+To stop the dashboard:
+•	Focus the terminal and press Ctrl + C.
+Key Modules
+•	src/data_preprocessing.py: Load and clean datasets
+•	src/feature_engineering.py: Feature engineering and scaling
+•	src/train_model.py: Model training and evaluation
+•	src/predict.py: Inference for new samples
+•	src/dashboard_utils.py: Visualization and business metrics
+Example Prediction in Python
 params = {
     "Air_temperature_K": 298.1,
     "Process_temperature_K": 308.6,
@@ -87,22 +67,20 @@ params = {
 prediction, probability = get_prediction(model, scaler, params, X_columns=X.columns)
 print(f"Prediction: {prediction}, Probability: {probability:.2%}")
 
-
-Business Impact:
-1. Prevented Failures: $2,050,000
-2. Maintenance Costs: $275,000
-3. False Alarm Costs: $14,000
-4. Missed Failure Costs: $1,000,000
-5. Net Savings: $761,000
-6. Annual Savings: $3,805,000
-7. ROI: 7510.0%
-
+Business Impact
+Example financial outcomes by using this predictive pipeline:
+Item	Value
+Prevented Failures	$2,050,000
+Maintenance Costs	$275,000
+False Alarm Costs	$14,000
+Missed Failure Cost	$1,000,000
+Annual Savings	$3,805,000
+ROI	7510.0%
 
 Contributing
-Pull requests and enhancements are welcome!
-If submitting major changes, please open an issue first to discuss your suggestions.
+•	Pull requests, ideas, and improvements are welcome!
+•	Please open an issue for major changes.
 
 
-Credits
-Developed by Pradeep M.
-Inspired by open-source end-to-end ML pipelines.
+Quick Start for Dashboard:
+streamlit run app.py
