@@ -1,33 +1,63 @@
 💥 Machine Failure Prediction
+
 An end-to-end modular ML pipeline with Streamlit dashboard for real-time machine failure detection.
+
 📁 Project Structure
+
 machine_failure_pred/
+
 ├── app.py                             # Streamlit web dashboard
+
 ├── src/                               # Core code modules
+
 │   ├── components/                    # Feature engineering & training components
+
 │   │   ├── data_preprocessing.py
+
 │   │   ├── feature_engineering.py
+
 │   │   ├── train_model.py
+
 │   │   ├── predict.py
+
 │   │   └── dashboard_utils.py
+
 │   ├── pipeline/                      # Training and prediction orchestration
+
 │   │   ├── training_pipeline.py
+
 │   │   └── prediction_pipeline.py
+
 │   ├── utils.py                       # Generic save/load functions
+
 │   ├── exception.py                   # Custom exception handling
+
 │   ├── logger.py                      # Logging setup
+
 │   └── __init__.py
+
 ├── data/
+
 │   └── machine failure.csv            # Input dataset
+
 ├── artifacts/                         # Saved model, scaler, and feature_columns
+
 │   ├── model.pkl
+
 │   ├── scaler.pkl
+
 │   └── feature_columns.pkl
+
 ├── logs/                              # Logged pipeline/debug info
+
 ├── notebook/
+
 │   └── machine_failure_analysis.ipynb # EDA & experimentation notebook
+
 ├── requirements.txt
+
 ├── setup.py
+
 └── README.md
 
 🚀 Features
