@@ -1,61 +1,90 @@
-Machine Failure Prediction (End-to-End ML Pipeline & Dashboard)
-Predict machine failures using sensor and process data with an XGBoost model. This repository features a modular Python codebase, a Streamlit web dashboard, and a Jupyter notebook for exploratory analysis.
-Project Structure
+💥 Machine Failure Prediction
+An end-to-end modular ML pipeline with Streamlit dashboard for real-time machine failure detection.
+📁 Project Structure
 machine_failure_pred/
-├── app.py                        # Streamlit web dashboard
-├── src/
-│   ├── __init__.py
-│   ├── data_preprocessing.py
-│   ├── feature_engineering.py
-│   ├── train_model.py
-│   ├── predict.py
-│   └── dashboard_utils.py
-├── notebook/
-│   └── machine_failure_analysis.ipynb
+├── app.py                             # Streamlit web dashboard
+├── src/                               # Core code modules
+│   ├── components/                    # Feature engineering & training components
+│   │   ├── data_preprocessing.py
+│   │   ├── feature_engineering.py
+│   │   ├── train_model.py
+│   │   ├── predict.py
+│   │   └── dashboard_utils.py
+│   ├── pipeline/                      # Training and prediction orchestration
+│   │   ├── training_pipeline.py
+│   │   └── prediction_pipeline.py
+│   ├── utils.py                       # Generic save/load functions
+│   ├── exception.py                   # Custom exception handling
+│   ├── logger.py                      # Logging setup
+│   └── __init__.py
 ├── data/
-│   └── machine failure.csv
-├── artifacts/                    # (optional: for saved models, etc)
+│   └── machine failure.csv            # Input dataset
+├── artifacts/                         # Saved model, scaler, and feature_columns
+│   ├── model.pkl
+│   ├── scaler.pkl
+│   └── feature_columns.pkl
+├── logs/                              # Logged pipeline/debug info
+├── notebook/
+│   └── machine_failure_analysis.ipynb # EDA & experimentation notebook
 ├── requirements.txt
-├── README.md
-└── .gitignore
+├── setup.py
+└── README.md
 
-Setup Instructions
-1.	Clone this repository
-git clone https://github.com/pradeepmalar/machine_failure_pred.git
+🚀 Features
+•	✅ Modular training and prediction pipeline (src/pipeline/)
+•	✅ Streamlit dashboard for real-time predictions (app.py)
+•	✅ Custom exceptions, centralized logging
+•	✅ Artifacts saved for reproducibility (artifacts/)
+•	✅ Visual metric dashboard + business impact summaries
+•	✅ Handles one-hot and scaler alignment under the hood
+📦 Setup Instructions
+1. Clone the Repo
+git clone https://github.com/YOUR_USERNAME/machine_failure_pred.git
 cd machine_failure_pred
 
-2.	(Optional) Create a virtual environment
+2. Create a Virtual Environment
 python -m venv venv
-source venv/bin/activate    # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-3.	Install dependencies
+3. Install Dependencies
 pip install -r requirements.txt
 
-4.	Ensure data is available
-o	Place machine failure.csv in the data/ directory.
-How to Run the Project
-A. Interactive Notebook Workflow
-Navigate to the notebook/ directory and open the notebook:
-jupyter notebook notebook/machine_failure_analysis.ipynb
+4. Prepare the Data
+Make sure your dataset is present at:
+data/machine failure.csv
 
-•	Run all cells for end-to-end data cleaning, model training, evaluation, and interactive prediction.
-•	All code uses modularized functions from the src/ folder.
-B. Web Dashboard (Streamlit)
-You can interact with the model and make live predictions in your browser.
-Start the dashboard:
+🛠️ Run the Training Pipeline
+This trains your model, evaluates it, and saves:
+•	model.pkl
+•	scaler.pkl
+•	feature_columns.pkl
+python src/pipeline/training_pipeline.py
+
+Artifacts are saved in the artifacts/ directory.
+💻 Run the Streamlit Dashboard
 streamlit run app.py
 
-•	Enter sensor data in the sidebar to get instant predictions.
-•	View model performance and business impact directly on the dashboard.
-To stop the dashboard:
-•	Focus the terminal and press Ctrl + C.
-Key Modules
-•	src/data_preprocessing.py: Load and clean datasets
-•	src/feature_engineering.py: Feature engineering and scaling
-•	src/train_model.py: Model training and evaluation
-•	src/predict.py: Inference for new samples
-•	src/dashboard_utils.py: Visualization and business metrics
-Example Prediction in Python
+Then visit: http://localhost:8501/
+Use the interactive fields to predict machine failures in real-time!
+✅ Handles:
+•	Feature scaling
+•	Type encoding alignment
+•	Failure probability prediction
+📊 Sample Dashboard Output
+•	Inputs: Sensor & process variables
+•	Output: Category (❌ Failure | ✅ No Failure), probability, and performance metrics
+🧪 Example Notebook Workflow
+Run freely in notebook/machine_failure_analysis.ipynb:
+•	Load & clean data
+•	Train model with updated features
+•	Test single prediction interactively
+🏁 Sample Usage (Python)
+from src.utils import load_object
+from src.components.predict import get_prediction
+
+model = load_object("artifacts/model.pkl")
+scaler = load_object("artifacts/scaler.pkl")
+
 params = {
     "Air_temperature_K": 298.1,
     "Process_temperature_K": 308.6,
@@ -64,23 +93,26 @@ params = {
     "Tool_wear_min": 0,
     "Type": "L"
 }
-prediction, probability = get_prediction(model, scaler, params, X_columns=X.columns)
-print(f"Prediction: {prediction}, Probability: {probability:.2%}")
 
-Business Impact
-Example financial outcomes by using this predictive pipeline:
-Item	Value
+prediction, probability = get_prediction(model, scaler, params)
+
+📈 Business Impact (Sample)
+Metric	Value
 Prevented Failures	$2,050,000
-Maintenance Costs	$275,000
-False Alarm Costs	$14,000
+Maintenance Cost	$275,000
+False Alarm Cost	$14,000
 Missed Failure Cost	$1,000,000
-Annual Savings	$3,805,000
-ROI	7510.0%
+Annual Net Savings	$3,805,000
+ROI	7510%
 
-Contributing
-•	Pull requests, ideas, and improvements are welcome!
-•	Please open an issue for major changes.
+✅ Requirements
+•	Python 3.7+
+•	pandas, numpy, scikit-learn
+•	xgboost
+•	streamlit
+•	dill
+•	joblib
+📌 All listed in requirements.txt
+🤝 Contributing
+Pull requests and issues are welcome — this project follows modular clean-code principles and is built for maintainability and educational growth.
 
-
-Quick Start for Dashboard:
-streamlit run app.py
